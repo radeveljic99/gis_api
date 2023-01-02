@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 
 from .helpers import *
-from .models import Location
+from .models import Location, Place
 from .serializers import LocationSerializer, ImageSerializer
 
 
