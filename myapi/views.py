@@ -26,8 +26,18 @@ def places(request):
     return JsonResponse({'data': place_serialized})
 
 
-def place(request, place_id):
-    data = {
-        'name': 'test',
-    }
-    return JsonResponse(data)
+def nearest_places(request, latitude, longitude):
+    list_of_places = list(Place.objects.all())
+    places_with_dist = []
+    for place in list_of_places:
+        places_with_dist.append((place, dist(float(latitude), float(longitude), float(place.location.latitude),
+                                             float(place.location.longitude))))
+    places_with_dist = sort_tuple(places_with_dist)
+    res_places = [place[0] for place in places_with_dist]
+    place_serialized = extract_serialized_list(json.loads(serializers.serialize('json', res_places)))
+    for place in place_serialized:
+        location_id = int(place['location'])
+        place['location'] = extract_serialized_list(
+            json.loads(serializers.serialize('json', Location.objects.filter(id=location_id))))
+        place['images'] = images_to_serialized_place(place)
+    return JsonResponse({'data': place_serialized})

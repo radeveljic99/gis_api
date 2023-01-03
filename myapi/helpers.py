@@ -3,6 +3,7 @@ import json
 from django.core import serializers
 
 from .models import PlaceImage, Image
+from math import radians, cos, sin, asin, sqrt
 
 
 def images_to_serialized_place(place):
@@ -29,3 +30,26 @@ def extract_serialized_list(list):
         new_list.append(extract_serialized_item(item))
 
     return new_list
+
+
+def dist(lat1, long1, lat2, long2):
+    lat1, long1, lat2, long2 = map(radians, [lat1, long1, lat2, long2])
+    dlon = long2 - long1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    km = 6371 * c
+    return km
+
+
+def sort_tuple(tup):
+    # getting length of list of tuples
+    lst = len(tup)
+    for i in range(0, lst):
+
+        for j in range(0, lst - i - 1):
+            if (tup[j][1] > tup[j + 1][1]):
+                temp = tup[j]
+                tup[j] = tup[j + 1]
+                tup[j + 1] = temp
+    return tup

@@ -11,7 +11,7 @@ router.register(r'images', views.ImageViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('places/',views.places, name='places'),
-    path('places/<int:place_id>', views.place, name='place'),
+    path('places/', views.places, name='places'),
+    path('places/<str:latitude>/<str:longitude>', views.nearest_places, name="nearest_places"),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
